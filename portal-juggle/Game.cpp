@@ -7,6 +7,7 @@ SDL_Renderer* Game::renderer = nullptr;
 
 Paddle topPaddle, botPaddle;
 Ball ball;
+Portal topPortal, botPortal;
 
 float RealRandomNumber(float min, float max) {
 	std::uniform_real_distribution<float> distribution(min, max);
@@ -37,11 +38,14 @@ Game::Game() {
 	ball.Position(topPaddle.position.x + topPaddle.w / 2 - ball.R / 2, topPaddle.position.y - ball.R);
 
 	//PORTALS//
-	topPortal.w = botPortal.w = 20;
-	topPortal.h = botPortal.h = 300;
-	topPortal.x = botPortal.x = WIDTH / 2 - topPortal.w / 2;
-	topPortal.y = 100;
-	botPortal.y = 400;
+	topPortal.Size(20, 300);
+	botPortal.Size(20, 300);
+
+	topPortal.Color(255, 0, 0, 255);
+	botPortal.Color(0, 0, 255, 255);
+
+	topPortal.Position(WIDTH / 2 - topPortal.w / 2, 100);
+	botPortal.Position(WIDTH / 2 - botPortal.w / 2, 400);
 
 	//MIDLINE//
 	midLine.w = WIDTH;
@@ -138,18 +142,18 @@ void Game::Update() {
 		if (SDL_HasIntersection(&ball.rect, &midLine))
 			Reset();
 
-		if (SDL_HasIntersection(&ball.rect, &topPortal)) {
+		if (SDL_HasIntersection(&ball.rect, &topPortal.rect)) {
 			float deltaY = HEIGHT / 2 - ball.position.y;
-			ball.position.x = topPortal.x + topPortal.w;
+			ball.position.x = topPortal.position.x + topPortal.w;
 			ball.position.y += 2 * deltaY + ball.R;
 			ball.velocity.y = -ball.velocity.y;
 			g = -g;
 			std::cout << "Ball teleported!" << std::endl;
 		}
 
-		if (SDL_HasIntersection(&ball.rect, &botPortal)) {
+		if (SDL_HasIntersection(&ball.rect, &botPortal.rect)) {
 			float deltaY = ball.position.y - HEIGHT / 2;
-			ball.position.x = botPortal.x - ball.R;
+			ball.position.x = botPortal.position.x - ball.R;
 			ball.position.y -= 2 * deltaY - ball.R;
 			ball.velocity.y = -ball.velocity.y;
 			g = -g;
@@ -210,6 +214,8 @@ void Game::Update() {
 	ball.Update();
 	topPaddle.Update();
 	botPaddle.Update();
+	topPortal.Update();
+	botPortal.Update();
 }
 
 void Game::Render() {
@@ -226,16 +232,13 @@ void Game::Render() {
 	//ball
 	ball.Render();
 
-	//top portal
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	SDL_RenderFillRect(renderer, &topPortal);
-
-	//bot portal
-	SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
-	SDL_RenderFillRect(renderer, &botPortal);
-
+	//paddles
 	topPaddle.Render();
 	botPaddle.Render();
+
+	//portals
+	topPortal.Render();
+	botPortal.Render();
 
 	//update renderer
 	SDL_RenderPresent(renderer);

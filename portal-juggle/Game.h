@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Paddle.h"
 #include "Ball.h"
+#include "Portal.h"
 
 class Game {
 public:
@@ -21,7 +22,7 @@ private:
 	const int WIDTH = 800;
 	const int HEIGHT = 800;
 	bool start, quit;
-	SDL_Rect topPortal, botPortal, midLine;
+	SDL_Rect midLine;
 	float ballVx, ballVy;
 	SDL_Window* window;
 };

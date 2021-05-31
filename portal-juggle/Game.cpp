@@ -5,7 +5,8 @@
 
 SDL_Renderer* Game::renderer = nullptr;
 
-Paddle topPaddle, botPaddle;
+GameObject topPaddle, botPaddle;
+
 Ball ball;
 Portal topPortal, botPortal;
 
@@ -160,7 +161,7 @@ void Game::Update() {
 			std::cout << "Ball teleported!" << std::endl;
 		}
 
-		if (SDL_HasIntersection(&ball.rect, &topPaddle.rect)) {
+		if (SDL_HasIntersection(&ball.rect, &topPaddle.destRect)) {
 			std::cout << "Top paddle hit" << std::endl;
 
 			ball.position.y = topPaddle.position.y - ball.R;
@@ -185,7 +186,7 @@ void Game::Update() {
 			ball.Velocity(ballVx, ballVy);
 		}
 
-		if (SDL_HasIntersection(&ball.rect, &botPaddle.rect)) {
+		if (SDL_HasIntersection(&ball.rect, &botPaddle.destRect)) {
 			std::cout << "Bot paddle hit" << std::endl;
 
 			ball.position.y = botPaddle.position.y + botPaddle.h;

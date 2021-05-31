@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include "GameObject.h"
 #include "Paddle.h"
 #include "Ball.h"
 #include "Portal.h"

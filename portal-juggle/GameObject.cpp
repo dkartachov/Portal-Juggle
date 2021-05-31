@@ -37,6 +37,11 @@ void GameObject::AddSprite(const char* filename) {
 	texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
 }
 
+void GameObject::Position(int x, int y) {
+	position.x = x;
+	position.y = y;
+}
+
 void GameObject::Render() {
 	if (hasSprite)
 		SDL_RenderCopy(Game::renderer, texture, &srcRect, &destRect);

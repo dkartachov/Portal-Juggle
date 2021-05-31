@@ -5,9 +5,8 @@
 
 SDL_Renderer* Game::renderer = nullptr;
 
-GameObject topPaddle, botPaddle;
+GameObject topPaddle, botPaddle, ball;
 
-Ball ball;
 Portal topPortal, botPortal;
 
 float RealRandomNumber(float min, float max) {
@@ -35,8 +34,8 @@ Game::Game() {
 	botPaddle.Position(3 * WIDTH / 4 - botPaddle.w / 2, HEIGHT / 2 - botPaddle.h / 2 + 30);
 
 	//BALL//
-	ball.Size(10);
-	ball.Position(topPaddle.position.x + topPaddle.w / 2 - ball.R / 2, topPaddle.position.y - ball.R);
+	ball.Size(10, 10);
+	ball.Position(topPaddle.position.x + topPaddle.w / 2 - ball.w / 2, topPaddle.position.y - ball.w);
 
 	//PORTALS//
 	topPortal.Size(20, 300);
@@ -110,8 +109,8 @@ void Game::Reset() {
 	topPaddle.position.x = WIDTH / 4 - topPaddle.w / 2;
 	botPaddle.position.x = 3 * WIDTH / 4 - botPaddle.w / 2;
 
-	ball.position.x = topPaddle.position.x + topPaddle.w / 2 - ball.R / 2;
-	ball.position.y = topPaddle.position.y - ball.R;
+	ball.position.x = topPaddle.position.x + topPaddle.w / 2 - ball.w / 2;
+	ball.position.y = topPaddle.position.y - ball.w;
 
 	float minRange = (float)WIDTH / 2 + 60.0f - (topPaddle.position.x + topPaddle.w / 2);
 	float maxRange = (float)WIDTH - 60.0f - (topPaddle.position.x + topPaddle.w / 2);
@@ -140,34 +139,34 @@ void Game::Update() {
 
 		std::cout << ball.position.y << std::endl;
 
-		if (SDL_HasIntersection(&ball.rect, &midLine))
+		if (SDL_HasIntersection(&ball.destRect, &midLine))
 			Reset();
 
-		if (SDL_HasIntersection(&ball.rect, &topPortal.rect)) {
+		if (SDL_HasIntersection(&ball.destRect, &topPortal.rect)) {
 			float deltaY = HEIGHT / 2 - ball.position.y;
 			ball.position.x = topPortal.position.x + topPortal.w;
-			ball.position.y += 2 * deltaY + ball.R;
+			ball.position.y += 2 * deltaY + ball.w;
 			ball.velocity.y = -ball.velocity.y;
 			g = -g;
 			std::cout << "Ball teleported!" << std::endl;
 		}
 
-		if (SDL_HasIntersection(&ball.rect, &botPortal.rect)) {
+		if (SDL_HasIntersection(&ball.destRect, &botPortal.rect)) {
 			float deltaY = ball.position.y - HEIGHT / 2;
-			ball.position.x = botPortal.position.x - ball.R;
-			ball.position.y -= 2 * deltaY - ball.R;
+			ball.position.x = botPortal.position.x - ball.w;
+			ball.position.y -= 2 * deltaY - ball.w;
 			ball.velocity.y = -ball.velocity.y;
 			g = -g;
 			std::cout << "Ball teleported!" << std::endl;
 		}
 
-		if (SDL_HasIntersection(&ball.rect, &topPaddle.destRect)) {
+		if (SDL_HasIntersection(&ball.destRect, &topPaddle.destRect)) {
 			std::cout << "Top paddle hit" << std::endl;
 
-			ball.position.y = topPaddle.position.y - ball.R;
+			ball.position.y = topPaddle.position.y - ball.w;
 
-			float minRange = (float)WIDTH / 2 + 60.0f - (ball.position.x + ball.R / 2);
-			float maxRange = (float)WIDTH - 60.0f - (ball.position.x + ball.R / 2);
+			float minRange = (float)WIDTH / 2 + 60.0f - (ball.position.x + ball.w / 2);
+			float maxRange = (float)WIDTH - 60.0f - (ball.position.x + ball.w / 2);
 
 			float range = RealRandomNumber(minRange, maxRange) / 60.0f;
 			std::cout << "Range = " << range << std::endl;
@@ -186,13 +185,13 @@ void Game::Update() {
 			ball.Velocity(ballVx, ballVy);
 		}
 
-		if (SDL_HasIntersection(&ball.rect, &botPaddle.destRect)) {
+		if (SDL_HasIntersection(&ball.destRect, &botPaddle.destRect)) {
 			std::cout << "Bot paddle hit" << std::endl;
 
 			ball.position.y = botPaddle.position.y + botPaddle.h;
 
-			float minRange = (float)(ball.position.x + ball.R / 2) - (float)(WIDTH / 2 - 60);
-			float maxRange = (float)(ball.position.x + ball.R / 2) - 60;
+			float minRange = (float)(ball.position.x + ball.w / 2) - (float)(WIDTH / 2 - 60);
+			float maxRange = (float)(ball.position.x + ball.w / 2) - 60;
 
 			float range = RealRandomNumber(minRange, maxRange) / 60.0f;
 			std::cout << "Range = " << range << std::endl;

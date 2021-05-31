@@ -37,9 +37,14 @@ void GameObject::AddSprite(const char* filename) {
 	texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
 }
 
-void GameObject::Position(int x, int y) {
+void GameObject::Position(float x, float y) {
 	position.x = x;
 	position.y = y;
+}
+
+void GameObject::Velocity(float x, float y) {
+	velocity.x = x;
+	velocity.y = y;
 }
 
 void GameObject::Render() {

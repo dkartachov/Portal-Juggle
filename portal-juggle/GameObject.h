@@ -11,7 +11,8 @@ public:
 	void Size(int width, int height);
 	void Color(int red, int green, int blue, int alpha);
 	void AddSprite(const char* filename);
-	void Position(int x, int y);
+	void Position(float x, float y);
+	void Velocity(float x, float y);
 	void Render();
 	void Update();
 private:

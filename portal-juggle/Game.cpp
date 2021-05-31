@@ -5,9 +5,9 @@
 
 SDL_Renderer* Game::renderer = nullptr;
 
-GameObject topPaddle, botPaddle, ball;
-
-Portal topPortal, botPortal;
+GameObject topPaddle, botPaddle;
+GameObject topPortal, botPortal;
+GameObject ball;
 
 float RealRandomNumber(float min, float max) {
 	std::uniform_real_distribution<float> distribution(min, max);
@@ -142,7 +142,7 @@ void Game::Update() {
 		if (SDL_HasIntersection(&ball.destRect, &midLine))
 			Reset();
 
-		if (SDL_HasIntersection(&ball.destRect, &topPortal.rect)) {
+		if (SDL_HasIntersection(&ball.destRect, &topPortal.destRect)) {
 			float deltaY = HEIGHT / 2 - ball.position.y;
 			ball.position.x = topPortal.position.x + topPortal.w;
 			ball.position.y += 2 * deltaY + ball.w;
@@ -151,7 +151,7 @@ void Game::Update() {
 			std::cout << "Ball teleported!" << std::endl;
 		}
 
-		if (SDL_HasIntersection(&ball.destRect, &botPortal.rect)) {
+		if (SDL_HasIntersection(&ball.destRect, &botPortal.destRect)) {
 			float deltaY = ball.position.y - HEIGHT / 2;
 			ball.position.x = botPortal.position.x - ball.w;
 			ball.position.y -= 2 * deltaY - ball.w;

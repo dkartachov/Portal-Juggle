@@ -2,6 +2,8 @@
 
 GameObject::GameObject() {
 	w = h = 20;
+	r = g = b = a = 255;
+
 	position.x = position.y = 0;
 	velocity.x = velocity.y = 0;
 
@@ -11,6 +13,8 @@ GameObject::GameObject() {
 	destRect.h = h;
 	destRect.x = position.x;
 	destRect.y = position.y;
+
+	hasSprite = false;
 }
 
 void GameObject::Size(int width, int height) {
@@ -18,7 +22,15 @@ void GameObject::Size(int width, int height) {
 	h = height;
 }
 
+void GameObject::Color(int red, int green, int blue, int alpha) {
+	r = red;
+	g = green;
+	b = blue;
+	a = alpha;
+}
+
 void GameObject::AddSprite(const char* filename) {
+	hasSprite = true;
 	surface = IMG_Load(filename); 
 	srcRect.w = surface->w;
 	srcRect.h = surface->h;
@@ -26,7 +38,12 @@ void GameObject::AddSprite(const char* filename) {
 }
 
 void GameObject::Render() {
-	SDL_RenderCopy(Game::renderer, texture, &srcRect, &destRect);
+	if (hasSprite)
+		SDL_RenderCopy(Game::renderer, texture, &srcRect, &destRect);
+	else {
+		SDL_SetRenderDrawColor(Game::renderer, r, g, b, a);
+		SDL_RenderFillRect(Game::renderer, &destRect);
+	}
 }
 
 void GameObject::Update() {
